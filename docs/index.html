@@ -33,8 +33,8 @@
     <div class="col-12">
       <div class="card text-center">
         <div class="card-body">
-          <h3 class="card-title mb-2">🚦 目前車流：<span class="fw-bold">light</span></h3>
-          <p class="card-text text-muted">更新時間：2025-06-08 08:15:54</p>
+          <h3 class="card-title mb-2">🚦 目前車流：<span class="fw-bold">moderate</span></h3>
+          <p class="card-text text-muted">更新時間：2025-06-08 08:29:25</p>
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@
   <script>
   /* ========= 讀 JSON 畫圖 ========= */
   async function loadData(){
-    const res = await fetch('../data/vehicles.json', {cache:'no-store'});
+    const res = await fetch('data/vehicles.json', {cache:'no-store'});
     const raw = await res.json();
 
     // 直接讓瀏覽器按當前時區解析

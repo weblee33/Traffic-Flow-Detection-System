@@ -21,7 +21,7 @@ YOUTUBE_URL = "https://www.youtube.com/watch?v=qMYlpMsWsBE"  # Fresno 直播
 COOKIE_FILE = None                       # 若需登入請填 "youtube_cookies.txt"
 
 VEHICLE_IDS = {2, 3, 5, 7}               # COCO: car、motorcycle、bus、truck
-JSON_PATH   = pathlib.Path("data/vehicles.json")
+JSON_PATH   = pathlib.Path("docs/data/vehicles.json")
 HTML_PATH   = pathlib.Path("docs/index.html")
 TEMPLATE_DIR = pathlib.Path("templates")
 

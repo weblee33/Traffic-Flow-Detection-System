@@ -63,7 +63,7 @@
   <script>
   /* ========= 讀 JSON 畫圖 ========= */
   async function loadData(){
-    const res = await fetch('../data/vehicles.json', {cache:'no-store'});
+    const res = await fetch('data/vehicles.json', {cache:'no-store'});
     const raw = await res.json();
 
     // 直接讓瀏覽器按當前時區解析
