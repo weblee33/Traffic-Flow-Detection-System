@@ -1,0 +1,33 @@
+name: traffic-detector
+
+on:
+  schedule:          # UTC → */5 代表每 5 分鐘
+    - cron:  '*/5 * * * *'
+  workflow_dispatch: # 手動執行
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r detector/requirements.txt
+
+      - name: Run YOLO detector & update site
+        run: python detector/detect.py
+
+      - name: Commit and push if something changed
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name  "traffic-bot"
+          git add data/ docs/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "auto: update traffic $(date -u +'%Y-%m-%d %H:%M')"
+            git push
+          fi

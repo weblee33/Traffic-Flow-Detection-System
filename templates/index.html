@@ -1,0 +1,33 @@
+
+{#  templates/index.html  #}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>車流辨識系統</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body{font-family:sans-serif;margin:2rem;text-align:center}
+    #level{font-size:2.5rem;margin:1rem 0}
+  </style>
+</head>
+<body>
+<h1>🚦 目前車流：<span id="level">{{ level }}</span></h1>
+<p>最後更新：{{ timestamp }}</p>
+
+<canvas id="chart" width="600" height="300"></canvas>
+
+<script>
+const trafficData = {{ data | safe }};   // 後端傳來的 JSON 陣列
+
+const labels  = trafficData.map(d => d.t.slice(11));   // hh:mm:ss
+const counts  = trafficData.map(d => d.c);
+
+new Chart(document.getElementById('chart'), {
+  type:'line',
+  data:{labels, datasets:[{label:'Vehicles', data:counts, tension:.3}]},
+  options:{scales:{y:{beginAtZero:true,max:20}}}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>車流辨識系統</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body{font-family:sans-serif;margin:2rem;text-align:center}
+    #level{font-size:2.5rem;margin:1rem 0}
+  </style>
+</head>
+<body>
+<h1>🚦 目前車流：<span id="level">{{LATEST}}</span></h1>
+<canvas id="chart" width="600" height="300"></canvas>
+
+<script>
+fetch('../data/vehicles.json?'+Date.now())
+  .then(r=>r.json())
+  .then(data=>{
+    const labels = data.map(d=>d.t.slice(11));      // 只要 hh:mm:ss
+    const counts = data.map(d=>d.c);
+    new Chart(document.getElementById("chart"), {
+      type:'line',
+      data:{labels, datasets:[{label:'Vehicles', data:counts, tension:.3}]},
+      options:{scales:{y:{beginAtZero:true}}}
+    });
+    // 動態填入最新壅塞等級 (level 由 detect.py 寫入 HTML)
+    document.getElementById("level").textContent = "{{LATEST}}";
+  });
+</script>
+</body>
+</html>

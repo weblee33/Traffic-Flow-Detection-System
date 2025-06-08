@@ -1,0 +1,4 @@
+yt-dlp>=2024.4
+opencv-python-headless
+ultralytics>=8.1  
+Jinja2>=3.1      
