@@ -1,4 +1,6 @@
-yt-dlp>=2024.4
+yt-dlp
+ultralytics
 opencv-python-headless
-ultralytics>=8.1  
-Jinja2>=3.1      
+jinja2
+tzdata       
+numpy
