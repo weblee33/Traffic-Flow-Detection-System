@@ -26,8 +26,8 @@ jobs:
           pip install -r detector/requirements.txt
 
       # -------（若直播需要 Cookies，取消註解以下 4~5 行）-------
-      # - name: Decode YouTube cookies
-      #   run: echo "${{ secrets.YT_COOKIES_B64 }}" | base64 -d > youtube_cookies.txt
+      - name: Decode YouTube cookies
+        run: echo "${{ secrets.YT_COOKIES_B64 }}" | base64 -d > detector/youtube_cookies.txt
       # ------------------------------------------------------------
 
       # 4. 執行 YOLO 偵測並產生 docs/index.html
