@@ -39,7 +39,7 @@ jobs:
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name  "traffic-bot"
-          git add data/ docs/index.html
+          git add docs/   # ✅ 包含 docs/index.html 和 docs/data/*
           if ! git diff --cached --quiet; then
             git commit -m "auto: update traffic $(date -u +'%Y-%m-%d %H:%M')"
             git push
