@@ -1,9 +1,9 @@
 name: traffic-detector
 
 on:
-  schedule:            # UTC → */5 代表每 5 分鐘跑一次
-    - cron: '*/5 * * * *'
-  workflow_dispatch:   # 允許手動執行
+  schedule:
+    - cron: '*/5 * * * *' # UTC → */5 代表每 5 分鐘跑一次
+  workflow_dispatch:     # 允許手動執行
 
 jobs:
   run:
@@ -25,21 +25,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r detector/requirements.txt
 
-      # -------（若直播需要 Cookies，取消註解以下 4~5 行）-------
-      # - name: Decode YouTube cookies
-      #   run: echo "${{ secrets.YT_COOKIES_B64 }}" | base64 -d > youtube_cookies.txt
-      # ------------------------------------------------------------
+      # 4. 解碼 YouTube Cookies 並寫入文件
+      - name: Decode YouTube cookies to file
+        run: echo "${{ secrets.YT_COOKIES_B64 }}" | base64 -d > detector/youtube_cookies.txt
+        env:
+          # 這裡的 YT_COOKIES_B64 是你 GitHub 倉庫中設置的 Secret 名稱
+          YT_COOKIES_B64: ${{ secrets.YT_COOKIES_B64 }}
 
-      # 4. 執行 YOLO 偵測並產生 docs/index.html
+      # 5. 執行 YOLO 偵測並產生 docs/index.html
       - name: Run YOLO detector & update site
         run: python detector/detect.py
+        env:
+          # 將 cookies 文件的路徑作為環境變量傳遞給 detect.py
+          # detect.py 將通過 os.environ.get('YOUTUBE_COOKIE_FILE') 來讀取它
+          YOUTUBE_COOKIE_FILE: detector/youtube_cookies.txt
 
-      # 5. 有變更就自動 commit + push
+      # 6. 有變更就自動 commit + push
       - name: Commit and push if something changed
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name  "traffic-bot"
-          git add docs/   # ✅ 包含 docs/index.html 和 docs/data/*
+          git add docs/ # ✅ 包含 docs/index.html 和 docs/data/*
           if ! git diff --cached --quiet; then
             git commit -m "auto: update traffic $(date -u +'%Y-%m-%d %H:%M')"
             git push

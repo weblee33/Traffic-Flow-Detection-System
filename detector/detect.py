@@ -15,10 +15,17 @@ from yt_dlp import YoutubeDL
 from ultralytics import YOLO
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import numpy as np                       # 只為過濾 boxes 用
+import os 
+
 
 # ───────────── 常數與路徑 ──────────────────────────
-YOUTUBE_URL = "https://www.youtube.com/watch?v=qMYlpMsWsBE"  # Fresno 直播
-COOKIE_FILE = None                       # 若需登入請填 "youtube_cookies.txt"
+# YOUTUBE_URL = "https://www.youtube.com/watch?v=qMYlpMsWsBE"  # Fresno 直播
+YOUTUBE_URL = "https://www.youtube.com/watch?v=pmM2CeSAx0I"
+COOKIE_FILE = os.environ.get('YOUTUBE_COOKIE_FILE')
+if COOKIE_FILE:
+    print(f"從環境變量中檢測到 Cookies 文件：{COOKIE_FILE}")
+else:
+    print("未檢測到 YOUTUBE_COOKIE_FILE 環境變量，yt-dlp 將不會使用 cookies。")
 
 VEHICLE_IDS = {2, 3, 5, 7}               # COCO: car、motorcycle、bus、truck
 JSON_PATH   = pathlib.Path("docs/data/vehicles.json")
@@ -31,7 +38,7 @@ CAM_TZ = ZoneInfo("America/Los_Angeles")  # Fresno 所在時區
 # ───────────── 取得 YouTube 串流 URL ───────────────
 def get_stream_url(url: str, cookies: str | None = None) -> str:
     ydl_opts = {
-        "format": "best[ext=mp4][height<=480]",  # 限 480p 省頻寬更穩
+        "format": "best[ext=mp4]",  # 限 480p 省頻寬更穩
         "quiet":  True
     }
     if cookies:
@@ -101,6 +108,6 @@ def main():
     print(f"[CAM {ts_cam}] vehicles={vehicle_cnt:2d} → {level}")
     # 若要本機即時預覽可取消下一行註解
     # cv2.imshow("Detection", result.plot()); cv2.waitKey(0); cv2.destroyAllWindows()
-
+    # cv2.imwrite("docs/snapshot2.jpg", result.plot())  # 儲存偵測快照
 if __name__ == "__main__":
     main()
